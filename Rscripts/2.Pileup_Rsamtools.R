@@ -10,6 +10,8 @@ source("Rscripts/pileupFreq.R")
 
 subtypes<-c("1A", "1B", "3A")
 
+
+#Adjust the max depth parameter based on data files
 for (g in 1:3) {
     sub<-subtypes[g]
     

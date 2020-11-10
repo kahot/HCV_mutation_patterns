@@ -1,16 +1,16 @@
-#Calculate mutation frequencies at each site from the frequency table file created in Step 2
+#Calculate mutation frequencies at each site from the frequency table file created in Step 2 (2.Pileup_Rsamtools.R)
 
 library(tidyverse)
 library(plyr)
 source("Rscripts/baseRscript.R")
 
-#Specify the Genotype
+#Specify the Subtype
 subtypes<-c("1A", "1B", "3A")
 
 for (g in 1:3) {
     sub<-subtypes[g]
     
-    # read the CSV files from the step2
+    # read the CSV files (unmerged + merged separately) from the step2
     HCVFiles<-list.files(paste0("Output",sub,"/CSV/"),pattern="un.csv")
     MergeFiles<-list.files(paste0("Output",sub,"/CSV/"), pattern="me.csv")
 
@@ -23,10 +23,12 @@ for (g in 1:3) {
             print(i)
             id<-substr(paste(HCVFiles[i]),start=1,stop=7)
             print(id)
-            merge<-read.csv(paste("Output",geno,"/CSV/",MergeFiles[i],sep=""))
+            
+            #Read in CSV files for merged and unmerged and combined them
+            merge<-read.csv(paste("Output",sub,"/CSV/",MergeFiles[i],sep=""))
             merge<-merge[,-c(1,2,8,9)]
             colnames(merge)<-c("pos","mA","mC","mG","mT", "mDel","mIns")
-            unmerge<-read.csv(paste("Output",geno,"/CSV/",HCVFiles[i],sep=""))
+            unmerge<-read.csv(paste("Output",sub,"/CSV/",HCVFiles[i],sep=""))
             unmerge<-unmerge[,-c(1,2,8,9)]
             colnames(unmerge)<-c("pos","uA","uC","uG","uT", "uDel","uIns")
     
@@ -48,14 +50,10 @@ for (g in 1:3) {
             
             #read the refrence sequence:
             #1B
-            reference<-read.dna(paste0("Data/HCV",geno,"_Consensus.fasta"), format = "fasta",as.character=TRUE)
-            ref.code<-reference[coding.start:coding.end]
+            reference<-read.dna(paste0("Data/HCV",sub,"_Consensus.fasta"), format = "fasta",as.character=TRUE)
+            ref.code<-reference[start:8800]
             SeqData<-merge(no,SeqData,by="pos",all.x=T)
             SeqData$ref<-ref.code[1:length(SeqData[,1])]
-            
-            #check that the right position is read  in the right reading frame
-            print(seqinr::translate(SeqData$MajNt[78:109]))
-            print(seqinr::translate(SeqData$MajNt[271:300]))
             
             SeqData$transition.maj<-NA
             SeqData$transition.ref<-NA
@@ -65,11 +63,11 @@ for (g in 1:3) {
             #rearrange the columns
             SeqData<-SeqData[,c("a","c","g","t","deletion","insertion","pos","TotalReads","TotalReads_indels","MajNt","ref","transition.maj","transition.ref")]
             
-            #determine Transition mutation freq of every site.
+            #determine mutation frequencies of every site.
             for (k in 1:nrow(SeqData)){
                     if (is.na(SeqData$MajNt[k])) {
-                            SeqData$freq.Ts[k]<-NA #transition mutations
-                            SeqData$freq.Ts.ref[k]<-NA
+                            SeqData$freq.Ts[k]<-NA #transition mutations (minor varient freq)
+                            SeqData$freq.Ts.ref[k]<-NA # transition mutations in realtive to the reference seq
                             
                             SeqData$freq.transv[k]<-NA #transversion mutations
                             SeqData$freq.transv.ref[k]<-NA
@@ -126,18 +124,11 @@ for (g in 1:3) {
                             #with indels
                             SeqData$freq.mutations.indels[k]<-AllMutNum/SeqData$TotalReads_indels[k]
                             SeqData$freq.mutations.indels.ref[k]<-AllMutNum2/SeqData$TotalReads_indels[k]
-                            
-                            
-                    }
-                    
-                    freqPatTs[i,k]<-SeqData$freq.Ts[k]
-                    freqPatTsRef[i,k]<-SeqData$freq.Ts.ref[k]
-                    freqPatTvs[i,k]<-SeqData$freq.transv[k]
-                    freqPatTvsRef[i,k]<-SeqData$freq.transv.ref[k]
-            }
+                        }
+                }
             
-            
-            write.csv(SeqData,paste0("Output",geno,"/SeqData2/SeqData_",id,".csv"))
+            write.csv(SeqData,paste0("Output",sub,"/SeqData/SeqData_",id,".csv"))
+    s}
             
         
 }
