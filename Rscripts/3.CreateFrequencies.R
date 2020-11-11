@@ -1,4 +1,5 @@
 #Calculate mutation frequencies at each site from the frequency table file created in Step 2 (2.Pileup_Rsamtools.R)
+# in ='/CSV/xxxx_un.csv' and '/CSV/xxxx_me.csv', out='/SeqData/SeqData_xxxxxx.csv'
 
 library(tidyverse)
 library(plyr)
@@ -49,17 +50,15 @@ for (g in 1:3) {
             SeqData$MajNt<-apply(SeqData[,2:5],1,function(x) c("a","c","g","t")[which.max(x)])
             
             #read the refrence sequence:
-            #1B
             reference<-read.dna(paste0("Data/HCV",sub,"_Consensus.fasta"), format = "fasta",as.character=TRUE)
             ref.code<-reference[start:8800]
             SeqData<-merge(no,SeqData,by="pos",all.x=T)
             SeqData$ref<-ref.code[1:length(SeqData[,1])]
             
-            SeqData$transition.maj<-NA
-            SeqData$transition.ref<-NA
-            for (j in 1:nrow(SeqData)) SeqData$transition.maj[j]<-transition(SeqData$MajNt[j])        
-            for (j in 1:nrow(SeqData)) SeqData$transition.ref[j]<-transition(SeqData$ref[j])
-            
+            #nuceotides from transition mutations
+            SeqData$transition.maj[j]<-sapply(SeqData$MajNt, function(x) transition(x))        
+            SeqData$transition.ref[j]<-sapply(SeqData$ref, function(x) transition(x))
+        
             #rearrange the columns
             SeqData<-SeqData[,c("a","c","g","t","deletion","insertion","pos","TotalReads","TotalReads_indels","MajNt","ref","transition.maj","transition.ref")]
             
