@@ -120,7 +120,7 @@ for (g in 1:3){
         
 }
 
-write.csv(SummaryPi, "Output_all/Diversity/Pi_byGene_bySubotype.csv")
+write.csv(SummaryPi, "Output_all/Diversity/Pi_byGene_bySubtype.csv")
 
 
 

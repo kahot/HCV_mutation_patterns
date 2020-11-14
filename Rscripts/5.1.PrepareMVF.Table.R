@@ -168,6 +168,10 @@ for (f in 2:3){
 write.csv(Summary,"Output_all/MVF/All.MinorVariant_Mean_3subtypes.csv")
 
 
+#S<-read.csv("Output_all/MVF/Tvs.MinorVariant_Mean_3subtypes.csv")
+#a1<-S[!is.na(S$mean.1A),]
+#b1<-S[!is.na(S$mean.1B),]
+#a3<-S[!is.na(S$mean.3A),]
 #################################
 #2) separate the sites that are Maj=Ref vs. Maj!=Ref for comparing the mutation types
 #merged.meta<-read.csv("Output_all/merged.metadata.csv",stringsAsFactors = F,row.names = 1)
@@ -272,7 +276,6 @@ write.csv(Summary.All,"Output_all/MVF/All.Same_Mean_3subtypes.csv")
 
 #Create mean and sd summary data tables
 Summary<-read.csv("Output_all/MVF/Ts.MinorVariant_Mean_3subtypes.csv",stringsAsFactors = F, row.names = 1)
-Summary$gene[Summary$gene=="NS1(P7)"]<-"NS1"
 
 Sum2<-read.csv("Output_all/MVF/Tvs.MinorVariant_Mean_3subtypes.csv",stringsAsFactors = F, row.names = 1)
 Sum3<-read.csv("Output_all/MVF/All.MinorVariant_Mean_3subtypes.csv",stringsAsFactors = F, row.names = 1)
@@ -286,6 +289,7 @@ SumT1<-Summary[,c("merged.pos", "mean.1A","mean.1B", "mean.3A")]
 SumT<-merge(SumT1, Sum2, by="merged.pos")
 SumT<-merge(SumT, Sum3, by="merged.pos")
 
+write.csv(SumT,"Output_all/MVF/SummaryAll.csv")
 ###### Get the depth info for overview2.2 ######
 ## Total Reads
 for (g in 2:3){

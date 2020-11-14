@@ -229,14 +229,12 @@ ggplot(sumG3, aes(x=Gene, y=Mean, shape=Type, color=Subtype, fill=Subtype))+
         annotate(geom="text", x=1:11, y=0.0205,  label=Test.results$Nonsyn,, color="gray60", size=2.5 )+
         annotation_custom(textGrob(label = "Syn", hjust = 0, gp = gpar(cex = .5, col="gray40")),  xmin=11.7,xmax=11.7,ymin=0.021,ymax=0.021)+
         annotation_custom(textGrob(label = "Nonyn", hjust = 0, gp = gpar(cex = .5,col="gray60")), xmin=11.7,xmax=11.7,ymin=0.0205,ymax=0.0205)+
-        #annotation_custom(textGrob(label = "S vs NS", hjust = 0, gp = gpar(cex = .5,col="gray40")), xmin=11.7,xmax=11.7,ymin=0,ymax=0)+
         annotation_custom(pointsGrob(pch=16, gp=gpar(cex = .4,col="gray60")), xmin=11.8,xmax=11.8,ymin=0,ymax=0 )+
         annotation_custom(textGrob(label ="vs", hjust = 0, gp = gpar(cex = .5,col="gray40")), xmin=11.95,xmax=11.95,ymin=0,ymax=0)+
         annotation_custom(pointsGrob(pch=4, gp=gpar(cex = .35,col="gray60")), xmin=12.3,xmax=12.3,ymin=0,ymax=0)+
         annotation_custom(pointsGrob(pch=4, gp=gpar(cex = .35,col="gray60")), xmin=11.8,xmax=11.8,ymin=-0.0006,ymax=-0.0006)+
         annotation_custom(textGrob(label ="vs", hjust = 0, gp = gpar(cex = .5,col="gray60")), xmin=11.95,xmax=11.95,ymin=-0.0006,ymax=-0.0006)+
         annotation_custom(pointsGrob(pch=23, gp=gpar(cex = .4,col="gray60")), xmin=12.3,xmax=12.3,ymin=-0.0006,ymax=-0.0006 )+
-        #annotation_custom(textGrob(label = "NS vs ", hjust = 0, gp = gpar(cex = .5,col="gray60")), xmin=11.7,xmax=11.7,ymin=-0.0005,ymax=-0.0005)+
         coord_cartesian(clip = "off")
 
 ggsave(filename="Output_all/Figures/MVF.byGene_byType_stats.pdf", width = 8, height = 5)

@@ -1,17 +1,10 @@
 #Use overveiw2 data to avoid losing data in the filtered overview (overview3) for Fst calculation
 library(ggplot2)
 library(reshape2)
-#library(ggpubr)
-#library(ggthemes)
-#library(plotrix)
 library(grid)
-#library(purrr)
-#library(zoo)
-#library(tidyverse)
-#library(gplots)
 library(colorspace)
-
 source("Rscripts/baseRscript.R")
+
 subs<-c("1A","1B","3A")
 colors2<-qualitative_hcl(6, palette="Dark3")
 col2_light<-qualitative_hcl(6, palette="Set3")
@@ -92,22 +85,6 @@ for (g in 1:3){
 PiNS$Gene<-factor(PiNS$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 write.csv(PiNS, "Output_all/Diversity/PiNS_Summary.csv")
 
-
-## Plot Pi
-#ggplot(PiNS, aes(x=Gene, y=Mean, shape=Type,color=Subtype))+
-#        geom_point(position=position_dodge(width=0.8),size =2)+scale_color_manual(values=colors2[c(1,3,5)])+
-#        scale_shape_manual(values=c(4,19))+
-#        #geom_errorbar(aes(ymin=Mean-SE, ymax=Mean+SE), width=.2, size=.2, position=position_dodge(width=0.8))+
-#        theme(axis.title.x=element_blank())+ylab(expression(paste("Nucleotide diversity (",pi,")")))+
-#        theme_bw()+
-#        labs(x="")+
-#        theme(axis.text.x = element_text(size=12),axis.title.y = element_text(size=13))+
-#        theme(panel.grid.major.x = element_blank())+
-#        geom_vline(xintercept = c(1:10)+0.5,  
-#                   color = "gray60", size=.4)+
-#        ylim(0.005,0.055)
-#
-##ggsave(filename="Output_all/Figures/Pi.byType.byGene.bySubtype_points.pdf",width = 8, height = 5)
 
 #plot PiN/PiS
 Pitb<-data.frame()

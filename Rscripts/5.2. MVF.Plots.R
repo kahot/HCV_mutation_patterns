@@ -13,7 +13,6 @@ sub<-c("1A","1B","3A")
 
 ## All MVF figures ##
 Summary<-read.csv("Output_all/MVF/All.MinorVariant_Mean_3subtypes.csv",stringsAsFactors = F, row.names = 1)
-Summary$gene[Summary$gene=="NS1(P7)"]<-"NS1"
 
 ## Plot across genomes all together (Figure 1)
 Summary2<-Summary[Summary$merged.pos<=8500 & Summary$merged.pos>=264,]
@@ -90,6 +89,8 @@ tb2m$Subtype<-c(rep("1A", times=8800),rep("1B", times=8800),rep("3A", times=8800
 tb2m$Type<-c(rep("Transition", times=8800*3), rep("Transversion", times=8800*3), rep("Total MV", times=8800*3))
 tb2m<-tb2m[!is.na(tb2m$value),]
 
+SumT<-read.csv("Output_all/MVF/SummaryAll.csv", stringsAsFactors = F, row.names = 1)
+
 col80<- paste0(colors2,"CC")
 col80<-col80[c(1,3,5)]
 
@@ -154,7 +155,7 @@ ggplot()+
         geom_errorbar(data=tb,aes(x=Type,y=Mean, ymin=Mean-SE, ymax=Mean+SE, fill=Subtype, color=Subtype),position=position_dodge(.75), width=.2, color="gray40")+
         scale_color_manual(values=colors2[c(1,3,5)])+
         theme_bw()+
-        theme(axis.text.x = element_text(size=13),axis.title.y = element_text(size=13))+
+        theme(axis.text.x = element_text(size=13),axis.title.y = element_text(size=15), axis.text.y=element_text(size=12))+
         geom_vline(xintercept = c(1:2)+0.5,  
                    color = "gray70", size=.3)+
         theme(panel.grid.major.x = element_blank())+
@@ -191,7 +192,7 @@ meSE<-data.frame(Subtype=rep(subs, times=3), Gene=rep(genenames, each=3))
 i=1
 for (k in 1:length(genenames)){
         for (g in 1:3){
-                df<-mf1[mf1$Gene==genenames[k]&mf1$Subtype==geno[g],]
+                df<-mf1[mf1$Gene==genenames[k]&mf1$Subtype==subs[g],]
                 meSE$SE[i]<-sqrt(mean(df$mean)*(1-mean(df$mean))/mean(df$depth, na.rm=T))
                 i=i+1
         }
@@ -280,4 +281,3 @@ ggplot()+
         theme(axis.title.x=element_blank())+
         annotate(geom="text", x=1:12, y=0.2,  label=Test.results$Sig,, color="red", size=2.5 )
 ggsave(filename="Output_all/Figures/MVF.byGene.bySubtype_box_stats.pdf", width = 8.5, height = 5)
-
