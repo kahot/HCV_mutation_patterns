@@ -91,7 +91,7 @@ for (g in 1:3){
         }
         
         #Plot the results 
-        filename<-paste0("Output",geno,"/HammingDistanceFiltering/",fname2,".pdf")
+        filename<-paste0("Output",sub,"/HammingDistanceFiltering/",fname2,".pdf")
         pdf(filename, width =10, height = 5)
         par(mfrow=c(1,2))
         par(mar = c(5,4,4,2))
@@ -141,7 +141,7 @@ for (g in 1:3){
         with_indels_removed<-length(Large.ham2[Large.ham2==T])
         print(paste("# of removed reads with indels: ",with_indels_removed))
         sam_RC<-rbind(sam_re,sam_re2)
-        write.table(sam_RC, paste0("Output",geno,"/sam2/", fname2,"-filtered.sam"),sep="\t", quote=F,row.names=F,col.names=F)
+        write.table(sam_RC, paste0("Output",sub,"/sam2/", fname2,"-filtered.sam"),sep="\t", quote=F,row.names=F,col.names=F)
         
         sum[[i]]<-data.frame(fname2,mapped.reads,no_indels, with_indels,no_indels_removed,with_indels_removed)
         dev.off()
