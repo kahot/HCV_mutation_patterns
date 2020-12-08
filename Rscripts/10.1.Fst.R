@@ -88,6 +88,13 @@ for (f in 1:3){
         write.csv(dt, paste0("Output_all/Diversity/Dt_",subs[f],".csv"))
 }        
 
+f=3
+dt<-read.csv(paste0("Output_all/Diversity/Dt_",subs[f],".csv"))
+levels(dt$gene)
+dt$gene<-as.character((dt$gene))
+dt$gene[dt$merged.pos>=2598 &dt$merged.pos<=2786]<-"P7"
+write.csv(dt, paste0("Output_all/Diversity/Dt_",subs[f],".csv"))
+
 #data trimming (remove extra rows -run only once)
 for (i in 1:3){
         dt<-read.csv(paste0("Output_all/Diversity/Dt_", subs[i],".csv"), stringsAsFactors = F, row.names = 1)

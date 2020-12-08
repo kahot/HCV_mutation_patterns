@@ -292,7 +292,7 @@ SumT<-merge(SumT, Sum3, by="merged.pos")
 write.csv(SumT,"Output_all/MVF/SummaryAll.csv")
 ###### Get the depth info for overview2.2 ######
 ## Total Reads
-for (g in 2:3){
+for (g in 1:3){
         sb<-sub[g] 
         SeqDt<-list.files(paste0("Output_all/Overview",sb, "/Overview2.2/"),pattern=".csv")
         Reads<-list()
@@ -345,4 +345,5 @@ for (i in 1:9){
         tb$SE[i]<-sqrt(tb$Mean[i]*(1-tb$Mean[i])/mean(SumT[,paste0("depth.",gty)], na.rm=T)) 
 }
 write.csv(tb, "Output_all/MVF/Summary_3subtypes.csv")
+
 

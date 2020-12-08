@@ -13,7 +13,6 @@ subs<-c("1A","1B","3A")
 ##################  Use Transiton MVF with only sites that are maj==ref for plotting by mutation types  #####
 
 sameDF<-read.csv("Output_all/MVF/Ts.Same_Mean_3subtypes.csv", stringsAsFactors = F, row.names = 1)
-sameDF$gene[sameDF$gene=="NS1(P7)"]<-"NS1"
 
 for (g in 1:3){
         sub<-subs[g]
@@ -36,7 +35,8 @@ mf3<-mf3[!is.na(mf3$mean),]
 #remove 5'UTR
 mf3<-mf3[mf3$gene!="5' UTR",]
 SumMFGenes3<-aggregate(mf3$mean,by=list(mf3$Subtype,mf3$gene, mf3$Type),FUN=mean)
-genenames<-unique(SumMFGenes3$Group.2)
+SumMFGenes3$Group.2<-factor(SumMFGenes3$Group.2, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+genenames<-levels(SumMFGenes3$Group.2)
 
 meSE3<-SumMFGenes3[,1:3]
 i=1
@@ -53,7 +53,7 @@ for (t in c("nonsyn", "syn", "stop")){
 
 sumG3<-cbind(SumMFGenes3, meSE3$SE)
 colnames(sumG3)<-c("Subtype","Gene","Type","Mean","SE")
-sumG3$Gene<-factor(sumG3$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+#sumG3$Gene<-factor(sumG3$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 sumG3$Type<-factor(sumG3$Type, levels=c("syn","nonsyn","stop"))
 
 write.csv(sumG3, "Output_all/MVF/MVFsummary.byGene.byType.withStop.csv")

@@ -90,7 +90,7 @@ Ndiv<-melt(d, id.vars=c("gene","Subtype"))
 colnames(Ndiv)[1]<-"Gene"
 colnames(Ndiv)[3:4]<-c("Type","Pi")
         
-Ndiv$Gene<-factor(Ndiv$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+Ndiv$Gene<-factor(Ndiv$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 ## nucleotide diversity plot
 ggplot(Ndiv, aes(x=Gene, y=Pi, shape=Type,color=Subtype))+
@@ -124,7 +124,7 @@ for (g in 1:3){
         Pitb<-rbind(Pitb, pi.tb)
 }
 
-Pitb$Gene<-factor(Pitb$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+Pitb$Gene<-factor(Pitb$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 #point plot
 ggplot(Pitb, aes(x=Gene, y=pNpS, color=Subtype))+
@@ -163,7 +163,7 @@ Pitb$Level<-"Between-host"
 
 Pitb2<-rbind(InvivoP, Pitb)
 Pitb2$Level<-factor(Pitb2$Level, levels=c("Within-host", "Between-host"))
-Pitb2$Gene<-factor(Pitb2$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+Pitb2$Gene<-factor(Pitb2$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 colnames(Pitb2)[3]<-"Subtype"
 
 ggplot(Pitb2, aes(x=Gene, y=pNpS, shape=Level,color=Subtype, fill=Subtype))+

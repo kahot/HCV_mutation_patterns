@@ -37,7 +37,7 @@ for (k in 2:length(subs)){
         write.csv(BrData, paste0("Output_all/Betareg/Betareg_",name,".csv"))
 }
 
-#Attache the gene info
+#Attache the subtype info
 brdata<-list()
 subs<-c("1A", "1B","3A")
 for (i in 1:length(subs)){
@@ -48,6 +48,8 @@ for (i in 1:length(subs)){
 
 ### addd gene annotation info for all genes
 genes<-read.csv("Data/HCV_annotations_joined.csv")
+genes$Gene<- factor(genes$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+
 genenames<-genes$Gene
 gene<-c()
 for (i in 2:12){
@@ -67,8 +69,5 @@ for (k in 1:length(brdata)){
         colnames(brData)[n+1]<-gname
         brData[brData$gene==i,n+1]<-1
     }
-    
-    brdata2[[k]]<-brData
-    names(brdata2)[k]<-names(brdata)[k]
-    write.csv(brData,paste0("Output_all/Betareg/brData_withGenes.",subs[k],".csv"))
+     write.csv(brData,paste0("Output_all/Betareg/brData_withGenes.",subs[k],".csv"))
 }

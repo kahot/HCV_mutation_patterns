@@ -29,7 +29,7 @@ brData2<-brData2[brData2$Stop == 0,]
 
 # run the best models (mod1 and mod2) from previous studies
 mod1<-betareg(mean ~ t + c + g + CpG + Nonsyn +bigAAChange+ t:Nonsyn + c:Nonsyn + g:Nonsyn +
-              Core +E1 +HVR1 +E2 +NS1 +NS2+NS3 +NS4A+NS5A+NS5B, data = brData2)
+              Core +E1 +HVR1 +E2 +P7 +NS2+NS3 +NS4A+NS5A+NS5B, data = brData2)
 summary(mod1)
 
 #The best fit model from Fitness Cost Analysis (remove two genes):  
@@ -47,7 +47,7 @@ summary(mod2)
 #E1           0.01651    0.02382    0.693   0.4882    
 #HVR1         0.27903    0.05915    4.717 2.39e-06 ***
 #E2           0.09398    0.01842    5.103 3.34e-07 ***
-#NS1          0.04810    0.03950    1.218   0.2233    
+#P7          0.04810    0.03950    1.218   0.2233    
 #NS2          0.10187    0.02208    4.613 3.96e-06 ***
 #NS4A        -0.06578    0.04494   -1.464   0.1433    
 #NS5B        -0.21094    0.02043  -10.326  < 2e-16 ***
@@ -60,7 +60,7 @@ summary(mod2)
 mod3 <- update(mod2, ~. -E1 -NS4A)
 summary(mod3)
 
-mod4 <- update(mod3, ~. -NS1)
+mod4 <- update(mod3, ~. -P7)
 summary(mod4)
 
 
@@ -94,7 +94,7 @@ brData2<-brData2[brData2$Stop == 0,] #7988
 
 # run the models
 mod1<-betareg(mean ~ t + c + g + CpG + Nonsyn +bigAAChange+ t:Nonsyn + c:Nonsyn + g:Nonsyn +
-                      Core +E1 +HVR1 +E2 +NS1 +NS2+NS3 +NS4A+NS5A+NS5B,data = brData2)
+                      Core +E1 +HVR1 +E2 +P7 +NS2+NS3 +NS4A+NS5A+NS5B,data = brData2)
 summary(mod1)
 
 # mod2:  
@@ -105,7 +105,7 @@ summary(mod2)
 mod3<- update(mod2, ~. -E1 -NS4A)
 summary(mod3)
 
-mod4 <- update(mod3, ~. -NS1)
+mod4 <- update(mod3, ~. -P7)
 summary(mod4)
 
 
@@ -140,7 +140,7 @@ brData2<-brData[complete.cases(brData),]
 brData2<-brData2[brData2$Stop == 0,] #8196
 
 mod1 <- betareg(mean ~ t + c + g + CpG  + t:Nonsyn + c:Nonsyn + g:Nonsyn + Nonsyn +bigAAChange + 
-                          Core +E1 +HVR1++E2 +NS1 +NS2++NS3 +NS4A+NS5A+NS5B, data = brData2)
+                          Core +E1 +HVR1++E2 +P7 +NS2++NS3 +NS4A+NS5A+NS5B, data = brData2)
 summary(mod1)
         
 #mod2
@@ -150,7 +150,7 @@ summary(mod2)
 #mod3
 mod3 <- update(mod2, ~. -E1 -NS4A)
 #mod4
-mod4 <- update(mod3, ~. -NS1)
+mod4 <- update(mod3, ~. -P7)
 
 
 AIC(mod1,mod2,mod3, mod4)
@@ -250,9 +250,6 @@ estMF<-estMF[,-1]
 
 estMF$`1A`<-as.numeric(estMF$`1A`)
 DF<-estMF
-#DF<-data.frame(sapply(estMF, function(x) as.numeric(as.character(x))))
-#colnames(DF)<-c("1A","3A")
-#DF<-lapply(estMF, function(x){ as.numeric(as.character(x))} )
 
 #chisquare test
 #1. 1A vs.3A

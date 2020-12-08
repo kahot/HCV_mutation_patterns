@@ -148,25 +148,3 @@ for (g in 1:3) {
 
 
 
-#################
-### Read depths for all files ###
-HCVFiles_SeqData<-list.files(paste0("Output",sub,"/SeqData/"),pattern="SeqData")
-ReadsSummary<-data.frame(Sample_ID=matrix(nrow=length(HCVFiles_SeqData)))
-ReadsSummary$MaxDepth<-""
-ReadsSummary$AveDepth<-""
-
-for (i in 1:length(HCVFiles_SeqData)){
-        print(i)
-        id<-substr(paste(HCVFiles_SeqData[i]),start=9,stop=15)
-        ReadsSummary$Sample_ID[i]<-id
-        print(id)
-        SeqData<-read.csv(paste0("Output",geno,"/SeqData/",HCVFiles_SeqData[i],sep=""))
-        ReadsSummary$MaxDepth[i]<-max(SeqData$TotalReads,na.rm=T)
-        ReadsSummary$AveDepth[i]<-mean(SeqData$TotalReads,na.rm=T)
-}
-
-write.csv(ReadsSummary,paste0("Output",sub,"/SeqData/ReadsSummary_",sub,".csv"))      
-
-
-
-

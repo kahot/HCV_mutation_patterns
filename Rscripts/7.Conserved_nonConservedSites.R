@@ -21,14 +21,7 @@ subs<-c("1A","1B","3A")
 ###read the MF data that are the same as ref to be consistent. 
 sameDF<-read.csv("Output_all/MVF/Ts.Same_Mean_3Subtypes.csv", stringsAsFactors = F, row.names = 1)
 sameDF<-sameDF[sameDF$merged.pos<8649& sameDF$merged.pos>=264,] 
-sameDF$gene<-factor(sameDF$gene, levels=c("5' UTR","Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
-
-
-#genes<-read.csv("Data/HCV_annotations_joined.csv", stringsAsFactors = F)
-#genes$Gene[genes$Gene=="NS1(P7)"]<-"NS1"
-#genenames<-genes$Gene[1:12]
-#merged.meta<-read.csv("Output_all/merged.metadata.csv", stringsAsFactors = F, row.names = 1)
-
+sameDF$gene<-factor(sameDF$gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 
 #attach the depth info:
@@ -82,7 +75,7 @@ for (t in c("nonsyn", "syn")){
 }
 sumGsame<-cbind(SumMFGenes, meSE$SE)
 colnames(sumGsame)<-c("Subtype","Gene","Type","Mean","SE")
-sumGsame$Gene<-factor(sumGsame$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+sumGsame$Gene<-factor(sumGsame$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 
 #Compare the sites that had the same type and nucleotide vs. all sites across 3 subtpyes:

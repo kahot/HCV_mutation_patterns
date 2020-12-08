@@ -14,7 +14,6 @@ div.colors<-c(colors2[1],col2_light[1],colors2[3],col2_light[3],colors2[5],col2_
 ## Calculate pi (nuc diversity) per gene by Subtype and plot them
 ### addd gene annotation info for all genes
 Genes<-read.csv("Data/HCV_annotations_joined.csv", stringsAsFactors = F)
-Genes$Gene[6]<-"NS1"
 gene.vector<-c()
 for (i in 1:12){
         gene.vector<-c(gene.vector, rep(Genes$Gene[i],times=Genes$start[i+1]-Genes$start[i]))
@@ -23,6 +22,7 @@ for (i in 1:12){
 n<-data.frame(pos=1:length(gene.vector))
 gene.vec<-cbind(n,gene.vector)
 colnames(gene.vec)[2]<-"gene"
+gene.vec$gene<-factor(gene.vec$gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 
 #Ds, paste0("Output_all/Diversity/Ds_",subs[g],".csv"))
@@ -82,7 +82,7 @@ for (g in 1:3){
         
 }
 
-PiNS$Gene<-factor(PiNS$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+PiNS$Gene<-factor(PiNS$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 write.csv(PiNS, "Output_all/Diversity/PiNS_Summary.csv")
 
 
@@ -96,7 +96,7 @@ for (g in 1:3){
         pi.tb$Subtype<-subs[g]
         Pitb<-rbind(Pitb, pi.tb)
 }
-Pitb$Gene<-factor(Pitb$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+Pitb$Gene<-factor(Pitb$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 ggplot(Pitb, aes(x=Gene, y=pNpS, color=Subtype))+
         geom_point(position=position_dodge(width=0.8),size =3)+scale_color_manual(values=colors2[c(1,3,5)])+

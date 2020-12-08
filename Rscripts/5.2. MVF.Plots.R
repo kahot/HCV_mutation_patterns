@@ -18,14 +18,13 @@ Summary<-read.csv("Output_all/MVF/All.MinorVariant_Mean_3subtypes.csv",stringsAs
 Summary2<-Summary[Summary$merged.pos<=8500 & Summary$merged.pos>=264,]
 
 genes<-read.csv("Data/HCV_annotations_joined.csv", stringsAsFactors = F)
-genes$Gene[genes$Gene=="NS1(P7)"]<-"NS1"
 genenames<-genes$Gene[1:12]
 
 Summary2$roll1001a<-c(rep(NA, times=99), rollmean(Summary2$mean.1A, k=100, na.rm=T))
 Summary2$roll1001b<-c(rep(NA, times=99), rollmean(Summary2$mean.1B, k=100, na.rm=T))
 Summary2$roll1003a<-c(rep(NA, times=99), rollmean(Summary2$mean.3A, k=100, na.rm=T))
 
-
+dev.off()
 #craete a plot
 pdf("Output_all/Figures/All.MVF_AcrossGenome.pdf",width=12,height=4.5)
 plot(mean.1A~merged.pos, data=Summary2,t="n",log='y',yaxt='n',xlab='Genome position', ylab="Minor variant frequency",
@@ -44,7 +43,6 @@ lines(roll1001a~merged.pos, data=Summary2, col=colors2[1],lwd=1)
 legend("topright",legend=c("1a","1b","3a"), col=colors2[c(1,3,5)], pch=16, bty = "n", cex=1)
 
 genes2<-genes[1:12,]
-#genes2$Gene[6]<-"NS1"
 
 abline(v=genes2$end, col="gray80", lwd=.5)
 
@@ -75,6 +73,7 @@ for (j in 1:nrow(genes2)){
 }
 box()
 dev.off()
+
 
 
 ####
@@ -215,8 +214,8 @@ for (i in 1:12){
         print(paste(genenames[i], subs[m]))
 }
 
-sumG$Gene<-factor(sumG$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
-mf1$Gene<-factor(mf1$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+sumG$Gene<-factor(sumG$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+mf1$Gene<-factor(mf1$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 sumG$Subtype[sumG$Subtype=="1A"]<-"1a"
 sumG$Subtype[sumG$Subtype=="1B"]<-"1b"
@@ -265,8 +264,8 @@ for (i in 1:12){
 }
 
 ## plot with significance info
-sumG$Gene<-factor(sumG$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
-mf1$Gene<-factor(mf1$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+sumG$Gene<-factor(sumG$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+mf1$Gene<-factor(mf1$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 ggplot()+
         geom_boxplot(data=mf1, aes(x=Gene, y=mean, fill=Subtype, color=Subtype),outlier.size=0.3,outlier.alpha = 0.2 )+

@@ -67,16 +67,17 @@ for (f in 1:3){
 ## Calculate pi (nuc diversity) per gene by genotype and plot them
 ### addd gene annotation info for all genes
 Genes<-read.csv("Data/HCV_annotations_joined.csv", stringsAsFactors = F)
-Genes$Gene[6]<-"NS1"
+Genes$Gene<-factor(Genes$Gene, levels=c("5' UTR","Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+
 gene.vector<-c()
 for (i in 1:12){
-        gene.vector<-c(gene.vector, rep(Genes$Gene[i],times=Genes$start[i+1]-Genes$start[i]))
+        gene.vector<-c(gene.vector, rep(paste(Genes$Gene[i]),times=Genes$start[i+1]-Genes$start[i]))
 }
 
 n<-data.frame(pos=1:length(gene.vector))
 gene.vec<-cbind(n,gene.vector)
 colnames(gene.vec)[2]<-"gene"
-
+gene.vec$gene<-as.character(gene.vec$gene)
 
 for(g in 1:3){
         flist<-list.files(paste0("Output",subs[g],"/Overview_D2/"), pattern="overviewD.csv")
@@ -110,7 +111,7 @@ for (g in 1:3){
         assign(lname, df)
         
         pi.genes<-data.frame(Gene=Genes$Gene[1:12])
-        for (i in 1:12){
+        for (i in 1:nrow(pi.genes)){
                df2<-df[df$gene==Genes$Gene[i],]
                pi.genes[i, "Mean"]<-sum(df2[,3:ncol(df2)], na.rm=T)/ sum(!is.na(df2[,3:ncol(df2)]))
                pi.genes[i,"SE"]<-mean(std.error(df2[,3:ncol(df2)], na.rm=T), na.rm=T) 
