@@ -138,6 +138,8 @@ write.csv(wilcox.NSvsST,"Output_all/MVF/WilcoxTest_NSvsStop.csv",row.names = T)
 apply(wilcox.resS, 1, function(x) x=length(x[x<0.05]) ) 
 #syn HVR1 1b-3a is significant
 wilcox.resS$`1b-3a`[3]<-wilcox.resS$`1b-3a`[14]
+write.csv(wilcox.resS, "Output_all/MVF/WilcoxTest_byGene.Syn.csv",row.names = T)
+
 apply(wilcox.resNS, 1, function(x) x=length(x[x<0.05]) ) 
 apply(wilcox.res2, 1, function(x) x=length(x[x<0.05]) ) 
 apply(wilcox.resST, 1, function(x) x=length(x[x<0.05]) ) 
@@ -158,6 +160,14 @@ Stopsites
 #NS5B 21 21 19
 
 # Do not use HVR1 data for stop sites. Too small data points.
+wilcox.resS  <-read.csv("Output_all/MVF/WilcoxTest_byGene.Syn.csv", header=T, row.names = 1,check.names=FALSE)
+wilcox.resNS <-read.csv("Output_all/MVF/WilcoxTest_byGene.NS.csv",  header=T, row.names = 1,check.names=FALSE)
+wilcox.res2  <-read.csv("Output_all/MVF/WilcoxTest_NSvsS.csv",      header=T, row.names = 1,check.names=FALSE)
+wilcox.resST <-read.csv("Output_all/MVF/WilcoxTest_byGene.stop.csv",header=T, row.names = 1,check.names=FALSE)
+wilcox.NSvsST<-read.csv("Output_all/MVF/WilcoxTest_NSvsStop.csv",   header=T, row.names = 1,check.names=FALSE)
+
+
+
 
 
 Test.results<-data.frame(gene=genenames)
@@ -202,7 +212,8 @@ for (i in 1:11){
         Test.results$Stop[i]<-Stsymb
 }
 
-      
+write.csv(Test.results, "Output_all/MVF/MF_test.results.csv")
+sumG3$Type<-factor(sumG3$Type, levels=c("syn","nonsyn","stop"))      
 ggplot(sumG3, aes(x=Gene, y=Mean, shape=Type, color=Subtype, fill=Subtype))+
         geom_point(aes(group=factor(Subtype), color=factor(Subtype)),position=position_dodge(width=0.8),size =2)+
         scale_color_manual(values=colors2[c(1,3,5)])+

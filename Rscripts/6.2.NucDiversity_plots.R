@@ -253,6 +253,8 @@ for (i in 1:11){
         Test.results$Stop[i]<-Stsymb
 }
 
+write.csv(Test.results,"Output_all/Diversity/NucDiv_Test.results.csv")
+
 PiNS$Type<-factor(PiNS$Type,levels=c("Syn","Nonsyn"))
 ggplot(PiNS, aes(x=Gene, y=Mean, shape=Type,color=Subtype))+
         geom_point(aes(group=factor(Subtype), color=factor(Subtype)), position=position_dodge(width=0.8),size =2)+scale_color_manual(values=colors2[c(1,3,5)])+

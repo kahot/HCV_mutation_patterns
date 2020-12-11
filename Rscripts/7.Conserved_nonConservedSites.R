@@ -113,7 +113,7 @@ for (t in c("nonsyn", "syn")){
 
 sumGvary<-cbind(SumMFGenes2, meSE2$SE)
 colnames(sumGvary)<-c("Subtype","Gene","Type","Mean","SE")
-sumGsame$Gene<-factor(sumGsame$Gene, levels=c("Core","E1", "HVR1","E2","NS1", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
+sumGsame$Gene<-factor(sumGsame$Gene, levels=c("Core","E1", "HVR1","E2","P7", "NS2","NS3","NS4A","NS4B","NS5A","NS5B"))
 
 sumGvary$group<-"non-conserved"
         

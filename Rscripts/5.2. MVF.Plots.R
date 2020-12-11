@@ -246,7 +246,6 @@ for (i in 1:3){
 
 write.csv(wilcox.res,"Output_all/MVF/WilcoxTest_all.byGene.csv",row.names = T)
 
-
 Test.results<-data.frame(gene=genenames[1:12])
 for (i in 1:12){
         symb1<-NA
