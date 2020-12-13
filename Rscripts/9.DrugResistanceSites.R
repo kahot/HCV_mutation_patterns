@@ -134,16 +134,24 @@ for (j in 1:length(subs)){
         ns5an<-nrow(dr[dr$Gene=="NS5A",])
         ns5bn<-nrow(dr[dr$Gene=="NS5B",])
         
-        #count the number of patients fixed with RAV (%)
+        #count the number of patients with fixed RAVs
         DR_diff$total<-apply(DR_diff[2:(s+1)],1,sum, na.rm=T)
-        DR_diff$Percent<-format(round(DR_diff$total/s*100, 1), nsmall=1)
-        DR_diff$Percent<-as.numeric(DR_diff$Percent)
-        DR_diff$percent<-as.numeric(DR_diff$Percent)
+        #% of patients with fixed RAVs
+        DR_diff$Percent_all<-format(round(DR_diff$total/s*100, 1), nsmall=1)
+        DR_diff$Percent_all<-as.numeric(DR_diff$Percent_all)
+        DR_diff$percent<-as.numeric(DR_diff$Percent_all)
+        #% of patients with fixed RAVs for the sites that had at least 1 fixed sample
         DR_diff$percent[DR_diff$percent==0]<-NA
         
+        #samples that had fixed RAVs
         fixed$no_fixed_RAVs[j]<-nrow(DR_diff[!is.na(DR_diff$percent),])
+        #proportion of RAVsites that had samples with fixed RAVs
         fixed$prop_fixed_RAVs[j]<-fixed$no_fixed_RAVs[j]/nrow(DR_MutFreq)
-        fixed$mean.percent_all[j]<-mean(DR_diff$Percent, na.rm=T)
+        #proportion of samples with fixed RAVs
+        fixed$prop_fixed_samples[j]<-fixed$no_fixed_RAVs[j]/s
+        #average % fixed RAVs
+        fixed$mean.percent_all[j]<-mean(DR_diff$Percent_all, na.rm=T)
+        #Average % of patients that had fixed RAVs for those sites that had at least 1 sample with fixed RAV
         fixed$mean.percent_fixedOnly[j]<-mean(DR_diff$percent, na.rm=T)
         
         #create a figure
@@ -223,6 +231,8 @@ write.csv(fixed,"Output_all/DR/Fixed_sites_summary.csv")
 
 subs<-c("1A","1B","3A")
 ravF<-data.frame(Subtype=subs)
+ravF_gene<-list()
+Fixedrav<-list()
 for (j in 1:length(subs)){
         HCVFiles<-list.files(paste0("Output",subs[j],"/Overview2/"), pattern="overview2.csv")
         s<-length(HCVFiles)
@@ -235,6 +245,95 @@ for (j in 1:length(subs)){
         df$Mean<-rowMeans(df[,2:ncol(df)], na.rm = T)
         
         ravF$MeanFreq[j]<-mean(DR_MutFreq$Mean, na.rm=T)
-        ravF$MeanFreq_noFixed[j]<-mean(df$Mean)
+        ravF$MeanFreq_notFixed[j]<-mean(df$Mean)
+        
+        #a number of patients that showed rav
+        DR_MutFreq$No.samples.withRAVs<-rowSums(DR_MutFreq[,2:(s+1)]!=0, na.rm=T)
+        #ravF$MeanCount[j]<-mean(DR_MutFreq$Counts, na.rm=T)
+        ravF$Percent.samples.withRAVs[j]<-mean(DR_MutFreq$No.samples.withRAVs, na.rm=T)/s*100
+        
+        ravsites<- drsites[drsites$genotype==subs[j],]
+        
+        #look at mut freq for differnet genes and types
+        DR_MutFreq$Gene<-ravsites$Gene
+        DR_MutFreq$multi.change<-ravsites$Need_both
+        df$Gene<-ravsites$Gene
+        df$multi.change<-ravsites$Need_both
+        rav_gene<-aggregate(DR_MutFreq$No.samples.withRAVs,by=list(DR_MutFreq$Gene), mean) 
+        colnames(rav_gene)<-c("Gene","Counts")
+        rav_gene$Proportion<-rav_gene$Counts/s
+        
+        #non-fixed RAV freq.
+        mf<-aggregate(df$Mean,by=list(df$Gene), mean, na.rm=T)
+        rav_gene$meanMF<-mf$x
+        #compare mut freq between rav that need two changes 
+        mf2<-aggregate(df$Mean, by=list(df$multi.change, df$Gene), mean)
+        rav_gene$meanMF.y<-mf2$x[mf2$Group.1=="y"]
+        rav_gene$meanMF.n<-mf2$x[mf2$Group.1=="n"]
+        
+        
+        
+        ravF_gene[[j]]<-rav_gene
+        names(ravF_gene)[j]<-subs[j]
+        
+        
+        DR_diff<-read.csv(paste0("Output_all/DR/RAV.counts.MutFreq_summary.",subs[j],".csv"), stringsAsFactors = F, row.name=1)
+        
+        DR_diff$Gene<-ravsites$Gene
+        DR_diff$Need_both<-ravsites$Need_both
+        #count the number of patients with fixed RAVs
+        DR_diff$total<-apply(DR_diff[2:(s+1)],1,sum, na.rm=T)
+        
+        #Look at the sites with fixed RAVs 
+        drd<-DR_diff[DR_diff$total>0,]
+        fix.ct<-aggregate(DR_diff$total, by=list(DR_diff$Need_both, DR_diff$Gene), mean)
+        colnames(fix.ct)<-c("Need_both","Gene","Ave.no.of.fixed.samples")
+        fix.ct$Ave.percent.fixed.samples.<-fix.ct$Ave.no.of.fixed.samples/s*100
+        fix.ct2<-aggregate(drd$total, by=list(drd$Need_both, drd$Gene), mean)
+        if (j==3){
+            fix.ct$Ave.percent.fixed.samples_withFixed<-fix.ct2$x/s*100
+        }
+        else{
+            fix.ct$Ave.percent.fixed.samples_withFixed<-c(fix.ct2$x/s*100, 0, 0)
+        }
+        #without q80k for 1a
+        if (j==1){
+            dr2<-DR_diff[DR_diff$ID!="Q80K",]
+            fix1<-aggregate(dr2$total, by=list(dr2$Need_both, dr2$Gene), mean)
+            colnames(fix1)<-c("Need_both","Gene","Ave.no.of.fixed.samples")
+            fix1$Ave.percent.fixed.samples.<-fix1$Ave.no.of.fixed.samples/s*100
+            drd2<-dr2[dr2$total>0,]
+            fix2<-aggregate(drd2$total, by=list(drd2$Need_both, drd2$Gene), mean)
+            fix1$Ave.percent.fixed.samples_withFixed<-c(fix2$x/s*100, 0, 0)
+            
+        }
+        
+        wilcox.test(DR_diff$total[DR_diff$Need_both=="y"],DR_diff$total[DR_diff$Need_both=="n"],alternative = "greater" )
+        #W = 746.5, p-value = 0.257 (3a)
+        #W = 846, p-value = 0.03871 (1a)
+        #W = 839, p-value = 0.2541
+        
+        
+        ct<-data.frame(table(DR_diff$Need_both, DR_diff$Gene))
+        fix.ct$number<-ct$Freq
+        Fixedrav[[j]]<-fix.ct
+        names(Fixedrav)[j]<-subs[j]
+        
+        
 }
 write.csv(ravF, "Output_all/DR/RAV_freq.csv")
+
+ravf<-data.frame()
+fixr<-data.frame()
+for (i in 1:3){
+    df<-ravF_gene[[i]]
+    df$subtype<-subs[i]
+    ravf<-rbind(ravf,df)
+    df2<-Fixedrav[[i]]
+    df2$subtype<-subs[i]
+    fixr<-rbind(fixr,df2)
+    
+}
+
+write.csv(ravf, "Output_all/DR/RAV.freq.gene.summary.csv")
+write.csv(fixr, "Output_all/DR/Fixed_rav.summary.csv")
