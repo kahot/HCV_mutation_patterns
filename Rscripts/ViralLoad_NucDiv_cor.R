@@ -65,6 +65,15 @@ wilcox.test(SampleSummary$AveDepth[SampleSummary$Subtype==subtypes[3]], SampleSu
 #W = 3710, p-value = 0.5952
 #W = 374, p-value = 0.7101
 
+#VL betw/genotypes 
+wilcox.test(vl$Viral_load[vl$Subtype=="1A"], vl$Viral_load[vl$Subtype=="3A"], "greater", paired =F)
+#W = 1366, p-value = 0.5893
+wilcox.test(vl$Viral_load[vl$Subtype=="1A"], vl$Viral_load[vl$Subtype=="1B"], "greater", paired =F)
+#W = 674, p-value = 0.7591
+wilcox.test(vl$Viral_load[vl$Subtype=="1B"], vl$Viral_load[vl$Subtype=="3A"], "greater", paired =F)
+#W = 143, p-value = 0.3526
+
+
 #####################################
 ## correlation between diversity and viral laod/read depth 
 
@@ -165,4 +174,12 @@ cor.test(div$AveDepth[div$Subtype=='3A'], div$Pi[div$Subtype=='3A'], method="spe
 #        rho 
 #-0.04331984 
 
+
+#Plot the viral load of each subtype
+ggplot(data=div2, aes(x=Subtype, y=Viral_load))+
+    geom_boxplot()+
+    #scale_color_manual(values=colors2[c(5)], guide='none')+
+    scale_y_continuous(trans='log10',labels=label_scientific)+
+    xlab("Subtype")+ylab('Viral load')+
+    theme_bw()
 
