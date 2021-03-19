@@ -3,7 +3,7 @@ library(colorspace)
 library(ggplot2)
 source("Rscripts/baseRscript.R")
 source("Rscripts/label_scientific.R")
-
+library(zoo)
 #Subtype colors 
 colors2<-qualitative_hcl(6, palette="Dark3")
 #1A=1, 1B=3, 3A=5, c("#E16A86","#50A315","#009ADE")
@@ -143,15 +143,14 @@ for (i in 1:3){
 }
 
 
-
 ggplot()+
         geom_boxplot(data=tb2m,aes(x=Type, y=value,fill=Subtype, middle=mean(value), 
                                    color=Subtype),outlier.alpha = 0.2)+ 
         labs(x="")+ylab("Minor variant frequency")+
         scale_y_continuous(trans = 'log10', labels=label_scientific)+
         scale_fill_manual(values=paste0(colors2[c(1,3,5)],"CC"), labels=c("1a","1b","3a"))+
-        geom_point(data=tb,aes(x=Type,y=Mean,color=Subtype, fill=Subtype), position=position_dodge(.75), shape=21, color="gray30", bg=rep(colors2[c(1,3,5)], times=3))+
-        geom_errorbar(data=tb,aes(x=Type,y=Mean, ymin=Mean-SE, ymax=Mean+SE, fill=Subtype, color=Subtype),position=position_dodge(.75), width=.2, color="gray40")+
+        geom_errorbar(data=tb, aes(x=Type,y=Mean, ymin=Mean-SE, ymax=Mean+SE, fill=Subtype, color=Subtype), position=position_dodge(.75), width=.2, color="gray40")+
+        geom_point(   data=tb, aes(x=Type,y=Mean, fill=Subtype, color=Subtype), position=position_dodge(width = 0.75), shape=21, color="gray30")+
         scale_color_manual(values=colors2[c(1,3,5)])+
         theme_bw()+
         theme(axis.text.x = element_text(size=13),axis.title.y = element_text(size=15), axis.text.y=element_text(size=12))+

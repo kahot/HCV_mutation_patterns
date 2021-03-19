@@ -10,7 +10,6 @@ library(scales)
 library(plotrix)
 library(RColorBrewer)
 
-
 #* Transition function*
 transition<-function(nuc){
     if (is.na(nuc)|nuc=="-"){ 
